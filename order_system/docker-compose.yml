@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      # backend앱의 빌드 컨텍스트 위치 지정
+      context: ./ordering
+      dockerfile: Dockerfile
+    # 재시도 횟수 지정
+    restart: on-failure:10
+    ports:
+      - "8080:8080"
+    environment:
+      # docker-compose 실행 시 생성되는 mydb를 바라보게 설정 Local DB는 중지해야함. mydb바라보게 하는 설정은 하나의 compose파일에 db가 세팅될때만 사용가능
+      # docker-compose로 네트워크를 결합하였기 때문에 mydb라는 서비스명으로 host호출 가능
+      # 하나의 네트워크로 묶여있기 때문에 성능적으로 훨씬 빠르다는 장점이 있다.
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mydb:3306/spring_order
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1234
+    volumes:
+      # docker-compose의 특정경로의 image-path라는 이름으로 /tmp와 매핑
+      - image-path:/tmp
+      # # 직접 경로 매핑
+      # - C:/Users/Playdata/Desktop/tmp:/tmp
+    depends_on:
+    # mydb가 먼저 생성된 이후에 backend를 생성하겠다라는 선언
+      - mydb
+
+  frontend:
+    build:
+      context: ./ordering-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+
+  mydb:
+    image: mariadb
+    environment:
+      - MARIADB_ROOT_PASSWORD=1234
+      - MARIADB_DATABASE=spring_order
+
+volumes:
+  image-path:

@@ -6,7 +6,8 @@ spring:
 
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://host.docker.internal:3306/spring_order
+    url: jdbc:mariadb://127.0.0.1:3306/spring_order
+    # url: jdbc:mariadb://host.docker.internal:3306/spring_order
     username: root
     password: 1234
 

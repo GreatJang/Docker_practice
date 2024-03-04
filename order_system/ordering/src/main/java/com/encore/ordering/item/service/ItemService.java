@@ -48,7 +48,7 @@ public class ItemService {
                 .stockQuantity(itemReqDto.getStockQuantity())
                 .build();
         Item item = itemRepository.save(new_item); // DB저장
-        Path path = Paths.get("C:/Users/Playdata/Desktop/tmp/", item.getId() + "_" + fileName); // 사진 파일은 해당 경로에 넣겠다.
+        Path path = Paths.get("/tmp/", item.getId() + "_" + fileName); // 사진 파일은 해당 경로에 넣겠다.
 //        Id를 넣으므로서 중복제거
         item.setImagePath(path.toString());
 
@@ -85,7 +85,7 @@ public class ItemService {
         Item item = itemRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("not found item"));
         MultipartFile multipartFile = itemReqDto.getItemImage();
         String fileName = multipartFile.getOriginalFilename();
-        Path path = Paths.get("C:/Users/Playdata/Desktop/tmp/", item.getId() + "_" + fileName); // 사진 파일은 해당 경로에 넣겠다.
+        Path path = Paths.get("/tmp/", item.getId() + "_" + fileName); // 사진 파일은 해당 경로에 넣겠다.
         //업데이트 할때 매개변수로 넘긴 값 새로 저장
         item.updateItem(itemReqDto.getName(),
                 itemReqDto.getCategory(), itemReqDto.getPrice(), itemReqDto.getStockQuantity(), path.toString());
